@@ -46,7 +46,7 @@ module BrNfe
 		def response
 			@response
 		end
-		
+
 		# Namespace da requisição SOAP
 		#
 		def env_namespace
@@ -88,12 +88,12 @@ module BrNfe
 		end
 
 		# O Namespace Indentifier é utilizado para adicionar o
-		# namespace na tag principal da requisição. Normalmente deve seguir 
+		# namespace na tag principal da requisição. Normalmente deve seguir
 		# o namespace utilizado para identificar o namespace da mensagem.
 		#
 		# Exemplo: se o método message_namespaces for {xmlns:ns1="http...."} então
 		# o namespace_identifier deveria ser 'ns1:'.
-		# E com isso irá adicionar o namespace na tag principal da requsição. 
+		# E com isso irá adicionar o namespace na tag principal da requsição.
 		# Exemplo com a requisição EnviarLoteRps:
 		# COM namespace_identifier => ns1:EnviarLoteRpsEnvio
 		# SEM namespace_identifier => EnviarLoteRpsEnvio
@@ -116,8 +116,8 @@ module BrNfe
 		# <ns2:Signature Id="?">
 		#    <ns2:SignedInfo Id="?">
 		#      <ns2:CanonicalizationMethod Algorithm="?">?</ns2:CanonicalizationMethod>
-		#      ..... 
-		# 
+		#      .....
+		#
 		def namespace_for_signature
 		end
 
@@ -158,7 +158,7 @@ module BrNfe
 			@soap_xml ||= "#{tag_xml}#{render_xml('soap_env')}".html_safe
 		end
 
-		# Versão do XML utilizado 
+		# Versão do XML utilizado
 		# Cada Cidade pode utilizar uma versão diferente do XML
 		#
 		# <b>Tipo de retorno: </b> _Symbol_
@@ -201,18 +201,18 @@ module BrNfe
 		def certificate_pkcs12
 			return @certificate_pkcs12 if @certificate_pkcs12
 			@certificate_pkcs12 = nil
-			
-			# É utilizado uma Thread e limpado os errors do OpenSSL para evitar perda de 
+
+			# É utilizado uma Thread e limpado os errors do OpenSSL para evitar perda de
 			# conexão com o banco de dados PostgreSQL.
 			# Veja: http://stackoverflow.com/questions/33112155/pgconnectionbad-pqconsumeinput-ssl-error-key-values-mismatch/36283315#36283315
 			# Veja: https://github.com/tedconf/front_end_builds/pull/66
-			Thread.new do 
-				@certificate_pkcs12 = OpenSSL::PKCS12.new(certificate_pkcs12_value, certificate_pkcs12_password) 
+			Thread.new do
+				@certificate_pkcs12 = OpenSSL::PKCS12.new(certificate_pkcs12_value, certificate_pkcs12_password)
 				OpenSSL.errors.clear
 			end.join
 			OpenSSL.errors.clear
 
-			@certificate_pkcs12 
+			@certificate_pkcs12
 		rescue
 		end
 
@@ -234,27 +234,27 @@ module BrNfe
 
 		def certificate_key=(value)
 			@certificate_key = value
-		end   
+		end
 
-		# Renderiza o xml a partir do nome de um arquivo 
+		# Renderiza o xml a partir do nome de um arquivo
 		# Irá procurar o arquivo a partir dos seguintes diretórios>
 		# 1° - A partir do parâmetro  :dir_path
 		# 2° - A partir do método   xml_current_dir_path
 		# 3° - A partir do método  xml_default_dir_path
-		# 
+		#
 		# Se não encontrar o arquivo em nenhum dos diretórios irá execurar
 		# uma excessão de RuntimeError
 		#
 		# Utilização
 		# `render_xml('file_name', {dir_path: '/my/custom/dir', context: Object}`
-		# 
+		#
 		# <b>Tipo de retorno: <b> _String_ (XML)
 		#
 		def render_xml file_name, opts={}
 			opts ||= {}
 			default_options = opts.extract!(:dir_path, :context)
 			default_options[:context] ||= self
-			
+
 			# Inicializa a variavel xml com nil para comparar se oa rquivo foi de fato encontrado.
 			xml = nil
 			get_xml_dirs(default_options[:dir_path]).each do |dir|
@@ -266,14 +266,14 @@ module BrNfe
 			# Lança uma excessão se não for encontrado o xml
 			# Deve verificar se é nil pois o arquivo xml pode estar vazio
 			if xml.nil?
-				raise "Arquivo #{file_name}.xml.slim não encontrado nos diretórios #{get_xml_dirs(default_options[:dir_path])}" 
+				raise "Arquivo #{file_name}.xml.slim não encontrado nos diretórios #{get_xml_dirs(default_options[:dir_path])}"
 			end
 			xml
 		end
 
 		def find_xml(file_name, dir, context=nil, options={})
 			if File.exists?("#{dir}/#{file_name}.xml.slim")
-				Slim::Template.new("#{dir}/#{file_name}.xml.slim").render(context, options).html_safe 
+				Slim::Template.new("#{dir}/#{file_name}.xml.slim").render(context, options).html_safe
 			end
 		end
 
@@ -287,7 +287,7 @@ module BrNfe
 		def xml_current_dir_path
 			[]
 		end
-		 
+
 		# Diretório padrão dos arquivos XML
 		#
 		def xml_default_dir_path
@@ -296,7 +296,7 @@ module BrNfe
 
 		# Existem 2 tipos de assinatura da NFS-e
 		# * [+:default+]
-		#   Assina o XML no momento em que está sendo montado. Funciona normalmente para a 
+		#   Assina o XML no momento em que está sendo montado. Funciona normalmente para a
 		#   maiora das prefeituras.
 		#   Primeiro assina cada RPS individualmente e adiciona a tag da assinatura e depois
 		#   Assina o LOTE RPS com todas os RPSs assinados
@@ -335,17 +335,17 @@ module BrNfe
 		#          </EnviarLoteRpsEnvio>
 		# sign_nodes = [
 		#   {
-		# 	   node_path: "//nf:EnviarLoteRpsEnvio/nf:LoteRps/nf:ListaRps/nf:Rps/nf:InfRps", 
+		# 	   node_path: "//nf:EnviarLoteRpsEnvio/nf:LoteRps/nf:ListaRps/nf:Rps/nf:InfRps",
 		# 	   node_namespaces: {nf: 'http://www.abrasf.org.br/ABRASF/arquivos/nfse.xsd'},
 		# 	   node_ids: ['R2','R3']
 		#   },
 		#   {
-		#     node_path: "//nf:EnviarLoteRpsEnvio/nf:LoteRps", 
+		#     node_path: "//nf:EnviarLoteRpsEnvio/nf:LoteRps",
 		#     node_namespaces: {nf: 'http://www.abrasf.org.br/ABRASF/arquivos/nfse.xsd'},
 		#     node_ids: ['L2']
 		#   },
 		# ]
-		# 
+		#
 		# Call Method:
 		# sign_xml(@xml, sign_nodes)
 		#
@@ -364,9 +364,9 @@ module BrNfe
 				signer.document.xpath(options[:node_path], options[:node_namespaces]).each_with_index do |node, i|
 					# digo quais tags devem ser assinadas
 					signer.digest!(node, id: "#{node_ids[i]}", enveloped: true)
-				end				
+				end
 			end
-			
+
 			# Assina o XML
 			signer.sign!(security_token: false, issuer_serial: true)
 
@@ -379,7 +379,7 @@ module BrNfe
 			cpf_cnpj = BrNfe::Helper::CpfCnpj.new(cpf_cnpj)
 			if cpf_cnpj.cnpj?
 				xml.Cnpj cpf_cnpj.sem_formatacao
-			elsif cpf_cnpj.cpf?       
+			elsif cpf_cnpj.cpf?
 				xml.Cpf  cpf_cnpj.sem_formatacao
 			end
 		end
@@ -389,12 +389,12 @@ module BrNfe
 			data_xml = format_data_xml_for_signature(data_xml)
 			ass = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
 				xml.Signature(xmlns: 'http://www.w3.org/2000/09/xmldsig#') do |signature|
-					
+
 					info = canonicalize(signed_info(data_xml, uri).doc.root())
-					signature.__send__ :insert, Nokogiri::XML::DocumentFragment.parse( info.to_s ) 
-					
+					signature.__send__ :insert, Nokogiri::XML::DocumentFragment.parse( info.to_s )
+
 					signature.SignatureValue xml_signature_value(info)
-					
+
 					signature.KeyInfo {
 						signature.X509Data {
 							signature.X509Certificate certificate.to_s.gsub(/\-\-\-\-\-[A-Z]+ CERTIFICATE\-\-\-\-\-/, "").gsub(/\n/,"")
@@ -414,7 +414,7 @@ module BrNfe
 				xml.SignedInfo(xmlns: "http://www.w3.org/2000/09/xmldsig#") do |info|
 					info.CanonicalizationMethod(Algorithm: canonicalization_method_algorithm)
 					info.SignatureMethod(Algorithm: 'http://www.w3.org/2000/09/xmldsig#rsa-sha1')
-					info.Reference('URI' => uri){ 
+					info.Reference('URI' => uri){
 						info.Transforms{
 							info.Transform(:Algorithm => 'http://www.w3.org/2000/09/xmldsig#enveloped-signature')
 							info.Transform(:Algorithm => 'http://www.w3.org/TR/2001/REC-xml-c14n-20010315')

@@ -26,7 +26,7 @@ require "br_nfe/service/association/have_rps"
 # Formatação de valores para XML
 require "br_nfe/service/concerns/values_ts/service_v1"
 
-# Regras e atributos para as classes 
+# Regras e atributos para as classes
 require "br_nfe/service/concerns/rules/recepcao_lote_rps"
 require "br_nfe/service/concerns/rules/consulta_nfse"
 require "br_nfe/service/concerns/rules/consulta_nfs_por_rps"
@@ -84,7 +84,7 @@ module BrNfe
 			autoload :ConsultaNfse
 			autoload :ConsultaSituacaoLoteRps
 			autoload :RecepcaoLoteRps
-			
+
 			module Build
 				extend ActiveSupport::Autoload
 				autoload :Base
@@ -97,7 +97,7 @@ module BrNfe
 				autoload :RecepcaoLoteRps
 			end
 		end
-		
+
 		autoload :Emitente
 		autoload :Destinatario
 		autoload :Intermediario
@@ -158,6 +158,13 @@ module BrNfe
 				autoload :Base
 				autoload :EmissionRPS
 				autoload :Cancellation
+			end
+		end
+		module Bhiss
+			module V1
+				extend ActiveSupport::Autoload
+				autoload :Base
+				autoload :RecepcaoLoteRps
 			end
 		end
 	end
@@ -284,10 +291,10 @@ module BrNfe
 
 	mattr_accessor :client_wsdl_log
 	@@client_wsdl_log = false
-	
+
 	mattr_accessor :client_wsdl_pretty_print_xml
 	@@client_wsdl_pretty_print_xml = false
-	
+
 	#################################################################################
 	################### DEFINIÇÃO DE CLASSES PADRÕES PARA NFS-e #####################
 		mattr_accessor :emitente_service_class
@@ -361,11 +368,11 @@ module BrNfe
 
 		mattr_accessor :volume_transporte_product_class
 		@@volume_transporte_product_class = BrNfe::Product::Nfe::Transporte::Volume
-		
+
 		mattr_accessor :transportador_product_class
 		@@transportador_product_class = BrNfe::Product::Nfe::Transporte::Transportador
-		
-	
+
+
 	def self.setup
 		yield self
 	end

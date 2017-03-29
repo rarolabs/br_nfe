@@ -1,6 +1,8 @@
 module BrNfe
 	class ActiveModelBase
 		include ::ActiveModel::Model
+    include ::ActiveRecord::Persistence
+    include ::ActiveRecord::ReadonlyAttributes
 		include BrNfe::ActiveModel::Associations
 
 		# Utilizado para referenciar o objeto que utiliza a informação.
@@ -29,14 +31,18 @@ module BrNfe
 		def default_values
 			{}
 		end
+
+    def readonly?
+      false
+    end
 	protected
-	
+
 		##################### FORMATAÇÃO DE VALORES #####################
 		# Dependendo do WebService de emissão de nota, é necssário passar alguns valores
 		# em formatos diferentes.
 		# Os metodos a seguir neste bloco poderão ser sobrescritos para cada Webservice
 		# tendo assim, um padrão definido para montar os dados para envio.
-		# 
+		#
 		def value_date(value)
 			value = Date.parse(value.to_s)
 			value.to_s(:br_nfe)
