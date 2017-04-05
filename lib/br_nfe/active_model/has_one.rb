@@ -8,7 +8,7 @@ module BrNfe
 
 					define_method attr_name do |&block|
 						block.call(send("#{attr_name}_force_instance")) if block
-						if instance_variable_get("@#{attr_name}").is_a?(eval(class_name)) 
+						if instance_variable_get("@#{attr_name}").is_a?(eval(class_name))
 							instance_variable_get("@#{attr_name}").instance_variable_set("@#{options[:inverse_of]}", self) if instance_variable_get("@#{attr_name}").send(options[:inverse_of]).blank?
 							instance_variable_get("@#{attr_name}")
 						else
@@ -17,7 +17,7 @@ module BrNfe
 					end
 
 					define_method "#{attr_name}=" do |value|
-						if value.is_a?(eval(class_name)) 
+						if value.is_a?(eval(class_name))
 							instance_variable_set("@#{attr_name}", value)
 						elsif value.is_a?(Hash)
 							send("#{attr_name}_force_instance").assign_attributes(value)
@@ -38,12 +38,12 @@ module BrNfe
 					options.merge!(args.extract_options!)
 					if options[:if]
 						if options[:if].is_a?(Proc)
-							validate  "#{attr_name}_validation", if: lambda{|rec| rec.send(attr_name) && options[:if].call(rec) }
+							validate  "#{attr_name}_validation".to_sym, if: lambda{|rec| rec.send(attr_name) && options[:if].call(rec) }
 						else
-							validate  "#{attr_name}_validation", if: lambda{|rec| rec.send(attr_name) && rec.send(options[:if]) }
+							validate  "#{attr_name}_validation".to_sym, if: lambda{|rec| rec.send(attr_name) && rec.send(options[:if]) }
 						end
 					else
-						validate  "#{attr_name}_validation", if: attr_name
+						validate  "#{attr_name}_validation".to_sym, if: attr_name
 					end
 					define_method "#{attr_name}_validation" do
 						if send(attr_name).invalid?

@@ -1,6 +1,6 @@
 module BrNfe
 	class Endereco < BrNfe::ActiveModelBase
-		
+
 		def default_values
 			{
 				codigo_pais: '1058',
@@ -32,8 +32,8 @@ module BrNfe
 		validates :codigo_ibge_uf, inclusion: {in: BrNfe::Constants::CODIGO_IBGE_UF}, allow_blank: true
 
 		def is_present?
-			logradouro.present? || numero.present? || complemento.present? || 
-			bairro.present? || nome_municipio.present? || codigo_municipio.present? || 
+			logradouro.present? || numero.present? || complemento.present? ||
+			bairro.present? || nome_municipio.present? || codigo_municipio.present? ||
 			cep.present?
 		end
 
