@@ -85,6 +85,10 @@ module BrNfe
 					# 	value_monetary(value, 4)
 					# end
 
+          def render_xml_without_signature
+            render_xml('servico_enviar_lote_rps_envio').strip
+          end
+
 				end
 			end
 		end
