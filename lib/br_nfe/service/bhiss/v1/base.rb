@@ -66,7 +66,6 @@ module BrNfe
 						'//*' #Começa o XMl a partir do body e pega a tag ConsultarNfseResposta
 					end
 
-
 					def canonicalization_method_algorithm
 						'http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithComments'
 					end
@@ -78,7 +77,6 @@ module BrNfe
  					def response_encoding
 						'UTF-8'
 					end
-
 
 					# Método é sobrescrito para atender o padrão do órgão emissor.
 					# Deve ser enviado o XML da requsiução dentro da tag CDATA
@@ -127,6 +125,10 @@ module BrNfe
 					# 	value = value.to_f/100
 					# 	value_monetary(value, 4)
 					# end
+
+          def render_xml_without_signature
+            render_xml('servico_enviar_lote_rps_envio').strip
+          end
 
 				end
 			end
