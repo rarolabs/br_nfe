@@ -6,7 +6,7 @@ module BrNfe
 				class Base  < BrNfe::ActiveModelBase
 					# 1: A resposta da requisição soap
 					attr_accessor :savon_response
-					
+
 					# 2: Um array com o caminho inicial padrão da requisição de retorno
 					attr_accessor :keys_root_path
 
@@ -16,7 +16,7 @@ module BrNfe
 					# para que possamos encontrar os valores necessários.
 					attr_accessor :body_xml_path
 
-					# 4: Codificação original do XML de resposta para que seja convertido 
+					# 4: Codificação original do XML de resposta para que seja convertido
 					#    para UTF-8
 					attr_accessor :xml_encode
 
@@ -28,7 +28,7 @@ module BrNfe
 						attr_accessor :message_code_key                                    # chave que representa o codigo do erro
 						attr_accessor :message_msg_key                                     # chave que representa a mensagem do erro
 						attr_accessor :message_solution_key                                # chave que representa a solução do erro
-						
+
 						def default_values
 							super.merge({
 								message_code_key:     :codigo,
@@ -38,7 +38,7 @@ module BrNfe
 						end
 					#######################   FIM DA DEFINIÇÃO DOS CAMINHOS   ############################
 					######################################################################################
-					
+
 					def response
 						raise "O método #response deve ser implementado na classe #{self.class}"
 					end
@@ -51,8 +51,12 @@ module BrNfe
 					def savon_body
 						return @savon_body if @savon_body.present?
 						if body_xml_path.present?
-							# body_xml = body_converted_to_xml
-							body_xml = savon_response.xml
+							if $enviando_rps
+								body_xml = savon_response.xml
+							else
+								body_xml = body_converted_to_xml
+							end
+							# body_xml = savon_response.xml
 							@savon_body = Nori.new.parse(body_xml).deep_transform_keys!{|k| k.to_s.underscore.to_sym}
 						else
 							@savon_body = savon_response.try(:body) || {}
@@ -77,7 +81,7 @@ module BrNfe
 					# 2º um array com as chaves em sequencia formando o caminho para encontrar o valor.
 					#
 					# A funcionalidade desse método funciona parecido com o `.dig` da classe Hash do
-					# Ruby 2.3.0. 
+					# Ruby 2.3.0.
 					# A diferença é que no caso de exmeplo a seguir não apresenta uma excessão par ao usuário
 					# hash = {v1: {v2: 'valor string'}}
 					# hash.dig(:v1, :v2, :v3) <- Dá erro
@@ -88,7 +92,7 @@ module BrNfe
 					def find_value_for_keys(hash, keys)
 						return if keys.blank?
 						keys = [keys] unless keys.is_a?(Array)
-						
+
 						result = hash
 						keys.each do |key|
 							if result.is_a?(Hash)
@@ -103,9 +107,9 @@ module BrNfe
 
 					# Quando para encontrar o valor de uma determinada chave
 					# é necessaŕio percorer o hash de retorno dês do inicio do mesmo.
-					# Como a mensagem tem uma chave 'root' padrão e pode ser diferente 
+					# Como a mensagem tem uma chave 'root' padrão e pode ser diferente
 					# para cada orgaao emissor, é setado uma valor na variavel keys_root_path
-					# para que não seja necessário ficar setando a mesma chave em todos os 
+					# para que não seja necessário ficar setando a mesma chave em todos os
 					# métodos utilizados para encontrar determinado valor
 					#
 					# <b>Tipo de retorno: </b> _Array_
@@ -137,7 +141,7 @@ module BrNfe
 					end
 
 					# Método utilizado para quando encontrar uam mensagem que seja um HAsh,
-					# onde nesse caso a mensagem terá um codigo de erro, uma mensagem, e uma 
+					# onde nesse caso a mensagem terá um codigo de erro, uma mensagem, e uma
 					# mensagem de solução
 					#
 					# <b>Tipo de retorno: </b> _hash_
@@ -150,7 +154,7 @@ module BrNfe
 						}
 					end
 
-					
+
 					# Método utilizado para pegar o número do lote RPS
 					#
 					# <b>Tipo de retorno: </b> _String_
@@ -159,7 +163,7 @@ module BrNfe
 						find_value_for_keys(savon_body, path_with_root(lot_number_path))
 					end
 
-					
+
 				end
 			end
 		end

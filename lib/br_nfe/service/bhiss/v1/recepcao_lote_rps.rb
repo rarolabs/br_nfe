@@ -23,6 +23,7 @@ module BrNfe
 					end
 
 					def xml_builder
+						$enviando_rps = true
 						xml = render_xml 'servico_enviar_lote_rps_envio'
 						sign_nodes = [
 							{

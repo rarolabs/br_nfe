@@ -9,6 +9,7 @@ module BrNfe
           end
 
           def xml_builder
+            $enviando_rps = false
             render_xml 'servico_consultar_situacao_lote_rps_envio'
           end
 
@@ -21,7 +22,7 @@ module BrNfe
         private
           # Não é utilizado o keys_root_path pois
           # esse órgão emissor trata o XML de forma diferente
-          # e para instanciar a resposta adequadamente é utilizado o 
+          # e para instanciar a resposta adequadamente é utilizado o
           # body_xml_path.
           # A resposta contém outro XML dentro do Body.
           #
