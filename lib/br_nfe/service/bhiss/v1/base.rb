@@ -4,6 +4,10 @@ module BrNfe
 			module V1
 				class Base < BrNfe::Service::Base
 
+					def tag_id
+						:Id # <- I maiúsculo
+ 					end
+
 					def wsdl
 						# Belo Horizonte - MG
 						if env == :production
@@ -13,6 +17,10 @@ module BrNfe
 						end
 					end
 
+					def certificado_obrigatorio?
+						true
+					end
+
 					def ssl_request?
 						true
 					end
@@ -20,14 +28,14 @@ module BrNfe
 					# Assinatura através da gem signer
 					def signature_type
 						:method_sign
+						# :default
 					end
 
 					def soap_namespaces
-						super.merge({
-							'xmlns:ws' => "http://ws.bhiss.pbh.gov.br",
-							'name' => 'nfse',
-							'targetNamespace' => 'http://ws.bhiss.pbh.gov.br'
-						})
+						{
+							'xmlns:soapenv' => "http://schemas.xmlsoap.org/soap/envelope/",
+							'xmlns:ws' => "http://ws.bhiss.pbh.gov.br/"
+						}
 					end
 
 
@@ -58,6 +66,20 @@ module BrNfe
 						'//*' #Começa o XMl a partir do body e pega a tag ConsultarNfseResposta
 					end
 
+
+					def canonicalization_method_algorithm
+						'http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithComments'
+					end
+
+					def message_namespaces
+ 						{'xmlns' => "http://www.abrasf.org.br/nfse.xsd"}
+ 					end
+
+ 					def response_encoding
+						'UTF-8'
+					end
+
+
 					# Método é sobrescrito para atender o padrão do órgão emissor.
 					# Deve ser enviado o XML da requsiução dentro da tag CDATA
 					# seguindo a estrutura requerida.
@@ -67,9 +89,30 @@ module BrNfe
 					def content_xml
 						xml_signed = xml_builder.html_safe
 						dados = "<ns2:#{soap_body_root_tag} xmlns:ns2='http://ws.bhiss.pbh.gov.br'>"
-						dados += xml_signed
+						dados += xml_cabecalho.html_safe
+						dados += "<nfseDadosMsg>"
+						dados += "<![CDATA[#{xml_signed}]]>"
+						dados += "</nfseDadosMsg>"
 						dados += "</ns2:#{soap_body_root_tag}>"
 						dados
+					end
+
+					def xml_cabecalho
+						dados = "<nfseCabecMsg>"
+						# dados += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+						dados += "<![CDATA[<cabecalho xmlns='http://www.abrasf.org.br/nfse.xsd' versao='1.00'>"
+						dados += "<versaoDados>1.00</versaoDados>"
+						dados += "</cabecalho>]]>"
+						dados += "</nfseCabecMsg>"
+						dados
+					end
+
+					def xml_current_dir_path
+						["#{BrNfe.root}/lib/br_nfe/service/bhiss/v1/xml"]+super
+					end
+
+					def render_xml_without_signature
+						render_xml('servico_enviar_lote_rps_envio').strip
 					end
 
 					# # Alíquota. Valor percentual.

@@ -58,6 +58,19 @@ module BrNfe
 			true
 		end
 
+		# A `tag_id` é utilizada para poder customizar como será a chave do ID para
+ 		# cada órgão emissor.
+ 		# Isso foi criado pois alguns emissores obrigam que a tag ID seja minúscula, outras
+ 		# que apenas o I seja maiúsculo, e assim vai.
+ 		# Exemplo: :id ou :ID, ou :Id
+ 		#
+ 		# <b>Tipo de retorno: </b> _String_ ou _Symbol_
+ 		# <b>Default: </b> _:id_
+ 		#
+ 		def tag_id
+ 			:id
+ 		end
+
 		# Deve conter o LINK do webservice a ser chamado
 		#
 		def wsdl
@@ -352,8 +365,11 @@ module BrNfe
 		def sign_xml(xml, sign_nodes=[])
 			return xml unless certificate
 			signer = Signer.new(xml)
-			signer.cert        = certificate
-			signer.private_key = certificate_key
+			# signer.cert        = certificate
+			# signer.private_key = certificate_key
+
+			signer.cert = OpenSSL::X509::Certificate.new(File.read("/Users/lesiopinheiro/Downloads/clc_ssl.pem"))
+			signer.private_key = OpenSSL::PKey::RSA.new(File.read("/Users/lesiopinheiro/Downloads/clc_ssl.pem"), "centrais2017")
 
 			# Como o documento não é um envelope SOAP preciso setar o security_node e o security_token_id
 			signer.security_node = signer.document.root
@@ -363,12 +379,12 @@ module BrNfe
 				node_ids = [options[:node_ids]].flatten
 				signer.document.xpath(options[:node_path], options[:node_namespaces]).each_with_index do |node, i|
 					# digo quais tags devem ser assinadas
-					signer.digest!(node, id: "#{node_ids[i]}", enveloped: true)
+					signer.digest!(node, tag_id => "#{node_ids[i]}", enveloped: false)
 				end
 			end
 
 			# Assina o XML
-			signer.sign!(security_token: false, issuer_serial: true)
+			signer.sign!(security_token: false)
 
 			signer.to_xml
 		end

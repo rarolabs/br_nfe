@@ -164,7 +164,13 @@ module BrNfe
 			module V1
 				extend ActiveSupport::Autoload
 				autoload :Base
+				autoload :CancelaNfse
+				autoload :ConsultaSituacaoLoteRps
+				autoload :ConsultaNfsPorRps
 				autoload :RecepcaoLoteRps
+				autoload :RecepcaoLoteRpsLimitado
+				autoload :ConsultaNfse
+				autoload :ConsultaLoteRps
 			end
 		end
 	end

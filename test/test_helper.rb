@@ -15,9 +15,10 @@ require 'webmock/minitest'
 
 WebMock.disable_net_connect!(allow: 'codeclimate.com')
 
-require "codeclimate-test-reporter"
-CodeClimate::TestReporter.start
-
+# require "codeclimate-test-reporter"
+# CodeClimate::TestReporter.start
+require 'simplecov'
+SimpleCov.start
 
 require 'factory_girl_rails'
 
@@ -55,6 +56,7 @@ end
 class MiniTest::Spec
 	include Savon::SpecHelper
 	include Shoulda::Matchers::ActiveModel
+	include Shoulda::Matchers::Independent
 	include FactoryGirl::Syntax::Methods
 
 	# Utilizado para que seja possível cusotmizar o valor utilizado
@@ -78,7 +80,13 @@ class MiniTest::Spec
 	def wont_be_message_error(column, message=nil, msg_params={}, exec_valid = true)
 		message = get_message(message, msg_params, column) if message
 		subject.valid? if exec_valid
+		puts "**********************************"
+		p column
+		puts "**********************************"
+		p subject.errors.messages
+		puts "**********************************"
 		messages = subject.errors.messages[column.to_sym]
+		puts "******* MESSAGES: #{messages.nil?}"
 		if message.nil?
 			messages.nil?.must_equal true, "Não deveria ter mensagem de erro para o atributo #{column}, mas foi encontrado os erros: \n -> #{messages ? messages.join("\n -> ") : '' }"
 		elsif messages.blank?

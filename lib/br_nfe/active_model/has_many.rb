@@ -39,11 +39,11 @@ module BrNfe
 						message: "invalid_#{attr_name.to_s.singularize}".to_sym
 					}.merge(args.extract_options!)
 					if options[:if]
-						validate "#{attr_name}_validations".to_sym, if: options[:if]
+						validate :"#{attr_name}_validations", if: options[:if]
 					elsif options[:unless]
-						validate "#{attr_name}_validations".to_sym, unless: options[:unless]
+						validate :"#{attr_name}_validations", unless: options[:unless]
 					else
-						validate "#{attr_name}_validations".to_sym
+						validate :"#{attr_name}_validations"
 					end
 
 					define_method "#{attr_name}_validations" do

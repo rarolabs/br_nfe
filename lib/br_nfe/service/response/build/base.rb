@@ -51,9 +51,9 @@ module BrNfe
 					def savon_body
 						return @savon_body if @savon_body.present?
 						if body_xml_path.present?
-							@savon_body = Nori.new.parse(
-								body_converted_to_xml
-							).deep_transform_keys!{|k| k.to_s.underscore.to_sym}
+							# body_xml = body_converted_to_xml
+							body_xml = savon_response.xml
+							@savon_body = Nori.new.parse(body_xml).deep_transform_keys!{|k| k.to_s.underscore.to_sym}
 						else
 							@savon_body = savon_response.try(:body) || {}
 						end
@@ -65,7 +65,8 @@ module BrNfe
 					# <b>Tipo de retorno: </b> _String_
 					#
 					def body_converted_to_xml
-						@body_converted_to_xml ||= canonicalize("#{find_value_for_keys(savon_response.try(:body), body_xml_path)}".encode(xml_encode).force_encoding('UTF-8'))
+						values_converted = find_value_for_keys(savon_response.try(:body), body_xml_path)
+						@body_converted_to_xml ||= canonicalize("#{values_converted}".encode(xml_encode).force_encoding('UTF-8'))
 					end
 
 					# Método utilizado para encontrar valores em um Hash
