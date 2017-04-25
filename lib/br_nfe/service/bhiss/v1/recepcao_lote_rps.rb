@@ -45,6 +45,11 @@ module BrNfe
 						sign_xml(xml, sign_nodes).gsub("<?xml version=\"1.0\"?>", "").strip
 					end
 
+					def render_xml_without_signature
+          	$enviando_rps = true
+            render_xml('servico_enviar_lote_rps_envio').strip
+          end
+
 				private
 					def response_class
 						BrNfe::Service::Response::RecepcaoLoteRps

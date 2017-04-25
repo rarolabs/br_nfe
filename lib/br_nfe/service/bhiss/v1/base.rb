@@ -109,10 +109,6 @@ module BrNfe
 						["#{BrNfe.root}/lib/br_nfe/service/bhiss/v1/xml"]+super
 					end
 
-					def render_xml_without_signature
-						render_xml('servico_enviar_lote_rps_envio').strip
-					end
-
 					# # Alíquota. Valor percentual.
 					# #  Formato: 0.XXXX
 					# #  Ex: 1% = 0.01
@@ -125,10 +121,6 @@ module BrNfe
 					# 	value = value.to_f/100
 					# 	value_monetary(value, 4)
 					# end
-
-          def render_xml_without_signature
-            render_xml('servico_enviar_lote_rps_envio').strip
-          end
 
 				end
 			end
