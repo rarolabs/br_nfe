@@ -83,6 +83,7 @@ module BrNfe
 			autoload :ConsultaNfsPorRps
 			autoload :ConsultaNfse
 			autoload :ConsultaSituacaoLoteRps
+			autoload :GerarNfse
 			autoload :RecepcaoLoteRps
 
 			module Build
@@ -94,6 +95,7 @@ module BrNfe
 				autoload :ConsultaNfsPorRps
 				autoload :ConsultaNfse
 				autoload :ConsultaSituacaoLoteRps
+				autoload :GerarNfse
 				autoload :RecepcaoLoteRps
 			end
 		end
@@ -167,6 +169,7 @@ module BrNfe
 				autoload :CancelaNfse
 				autoload :ConsultaSituacaoLoteRps
 				autoload :ConsultaNfsPorRps
+				autoload :GerarNfse
 				autoload :RecepcaoLoteRps
 				autoload :RecepcaoLoteRpsLimitado
 				autoload :ConsultaNfse

@@ -95,10 +95,10 @@ module BrNfe
 						attr_accessor :invoice_destinatario_endereco_codigo_municipio_path # Codigo_municipio do destinatário da NFS
 						attr_accessor :invoice_destinatario_endereco_uf_path               # Uf do destinatário da NFS
 						attr_accessor :invoice_destinatario_endereco_cep_path              # Cep do destinatário da NFS
-					
+
 					#######################   FIM DA DEFINIÇÃO DOS CAMINHOS   ############################
 					######################################################################################
-					
+
 					######################################################################################
 					###############   DEFINIÇÃO DOS VALORES PADRÕES PARA O CAMINHO DA NFSE ###############
 						def default_values
@@ -187,13 +187,13 @@ module BrNfe
 						end
 					##############  FIM DEFINIÇÃO DOS VALORES PADRÕES PARA O CAMINHO DA NFSE #############
 					######################################################################################
-					
+
 					# Método que retorna as notas fiscais emitidas.
 					# Como pode ser que retorne mais de uma NF, a busca pela NF
 					# pode retornar um Array ou um Hash.
 					# Se retornar um array é porque existe mais de uma NFE, então é necessario
 					# percorer com um loop e instanciar cada nota com seus valores.
-					# Se retornar um Hash é porque tem apenas uma NFe, e nesse caso 
+					# Se retornar um Hash é porque tem apenas uma NFe, e nesse caso
 					# irá instanciar apenas a nfe encontrada.
 					#
 					# <b>Tipo de retorno: </b> _Array_
@@ -225,7 +225,7 @@ module BrNfe
 						savon_response.xml
 					end
 
-					# Método responsável por instanciar a nota fiscal de acordo com o hash 
+					# Método responsável por instanciar a nota fiscal de acordo com o hash
 					#   passado por parêmetro
 					# O parâmetro recebido deve ser o Hash representado pelo tipo de dados tcCompNfse(do manual NFS-e v1)
 					#
@@ -262,7 +262,7 @@ module BrNfe
 						build_destinatario_nfe(nfe, invoice_hash)
 						nfe
 					end
-					
+
 					def build_rps_fields_nfe(nfe, invoice_hash)
 						nfe.assign_attributes({
 							rps_numero:                       find_value_for_keys(invoice_hash, invoice_rps_numero_path                      ),
