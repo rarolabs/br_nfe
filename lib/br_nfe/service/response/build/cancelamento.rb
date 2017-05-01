@@ -20,8 +20,9 @@ module BrNfe
 					end
 					#######################   FIM DA DEFINIÇÃO DOS CAMINHOS   ############################
 					######################################################################################
-					
-					def response
+
+					def response(enviando_rps = false)
+						$enviando_rps = enviando_rps
 						@response ||= BrNfe::Service::Response::Cancelamento.new({
 							original_xml:     savon_response.xml.force_encoding('UTF-8'),
 							error_messages:   get_message_for_path(message_errors_path),

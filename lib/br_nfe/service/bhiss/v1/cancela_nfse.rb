@@ -10,7 +10,7 @@ module BrNfe
           end
 
           def xml_builder
-            $enviando_rps = false
+            $enviando_rps = true
             render_xml 'servico_cancelar_nfse_envio'
           end
 
