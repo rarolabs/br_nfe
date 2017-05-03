@@ -13,7 +13,7 @@ module BrNfe
 		delegate :nome_municipio,  :nome_municipio=,   to: :endereco, prefix: :endereco
 		delegate :codigo_ibge_uf,  :codigo_ibge_uf=,   to: :endereco, prefix: :endereco
 		delegate :codigo_municipio,:codigo_municipio=, to: :endereco, prefix: :endereco
-		
+
 		# Obrigatórios
 		attr_accessor :cpf_cnpj
 		alias_attribute :cpf,  :cpf_cnpj
@@ -24,7 +24,7 @@ module BrNfe
 		attr_accessor :nome_fantasia
 		attr_accessor :telefone
 		attr_accessor :email
-		
+
 		attr_accessor :regime_especial_tributacao
 		attr_accessor :natureza_operacao
 		attr_accessor :inscricao_municipal
@@ -39,14 +39,14 @@ module BrNfe
 		#
 		attr_accessor :codigo_regime_tributario
 
-		validates :cpf_cnpj, :razao_social, presence: true
+		validates :razao_social, presence: true
 		validates :codigo_regime_tributario, inclusion: {in: ['1', '2', '3', 1, 2, 3]}, allow_blank: true, if: :validate_regime_tributario?
-		
+
 		def cpf_cnpj
 			return "" unless @cpf_cnpj.present?
 			BrNfe::Helper::CpfCnpj.new(@cpf_cnpj).sem_formatacao
 		end
-			
+
 		def razao_social
 			"#{@razao_social}".to_valid_format_nf
 		end
@@ -68,6 +68,6 @@ module BrNfe
 		def validate_regime_tributario?
 			true
 		end
-		
+
 	end
 end

@@ -2,7 +2,7 @@ module BrNfe
 	module Service
 		module Response
 			class Default  < BrNfe::ActiveModelBase
-				
+
 				# Array contendo as mensagens de erros
 				# No array pode conter Hash (com :codigo, :mensagem e :correcao)
 				# mas também pode conter mensagens de texto puro
@@ -10,7 +10,7 @@ module BrNfe
 				# <b>Tipo de retorno: </b> _Array_
 				#
 				attr_accessor :error_messages
-				
+
 				# Array contendo as notas fiscais encontradas no xml de retorno.
 				# Utillizado em algumas requisições onde pode ser que retorne algum XML de NFe
 				# É um Array contendo objetos da classe BrNfe::Service::Response::NotaFiscal
@@ -32,14 +32,14 @@ module BrNfe
 				# <b>Tipo de retorno: </b> _Symbol_
 				#
 				attr_accessor :status
-				
+
 
 				def initialize(attributes = {})
 					self.notas_fiscais  = [] # Para poder utilizar o <<
 					self.error_messages = [] # Para poder utilizar o <<
 					super
 				end
-				
+
 				def notas_fiscais
 					@notas_fiscais = [@notas_fiscais].flatten # Para retornar sempre um vetor
 				end
@@ -76,7 +76,7 @@ module BrNfe
 				end
 
 				def get_status
-					error_messages.blank? ? :success : :falied
+					error_messages.blank? ? :success : :failed
 				end
 
 				# Retorna um array apenas com os códigos das mensagens de erro.
